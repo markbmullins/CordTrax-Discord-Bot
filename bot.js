@@ -68,13 +68,13 @@ client.on("message", async (message) =>{
 		con_database.query(`SELECT * FROM prefixes WHERE guildid = '${message.guild.id}'` , (err, result, fields) =>{
 			err ? reject(err) : resolve({ result, fields });
 			console.log(result);
-			if(result.length===0){
-				let sql = `INSERT INTO prefixes (guildid, prefix) VALUES ('${message.guild.id}', '${process.env.prefix}')`;
-				con_database.query(sql);
+			if(result.rows===0){
+				let query = `INSERT INTO prefixes (guildid, prefix) VALUES ('${message.guild.id}', '${process.env.prefix}')`;
+				con_database.query(query);
 				prefix = process.env.prefix;
 			} 
 			else{
-				prefix = `${result.prefix}`;
+				prefix = `${result.rows[0].prefix}`;
 			}
 		});
 	});
