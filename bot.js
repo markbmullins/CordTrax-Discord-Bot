@@ -74,7 +74,7 @@ client.on("message", async (message) =>{
 				prefix = process.env.prefix;
 			} 
 			else{
-				prefix = `${result.rows[0].prefix}`;
+				prefix = `${result.fields[0].prefix}`;
 			}
 		});
 	});
