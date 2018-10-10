@@ -1,11 +1,13 @@
 {
-  "name": "App Name", 
-  "description": "App Description", 
-  "version": "0.0.0", 
-  "dependencies": {}, 
-  "devDependencies": {}, 
+  "name": "App Name",
+  "description": "App Description",
+  "version": "0.0.0",
+  "dependencies": {
+    "pg": "^7.5.0"
+  },
+  "devDependencies": {},
   "scripts": {
     "start": "node index.js"
-  }, 
+  },
   "main": "index.js"
 }

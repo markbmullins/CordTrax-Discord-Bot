@@ -3,7 +3,7 @@ const client = new Discord.Client(); //Client class of the npm package to intera
 const config = require("./config.json"); //includes the config file
 const tokenfile = require("./tokenfile.json"); //includes token file
 const fs = require("fs"); //includes the file system package
-const mysql = require("mysql");
+const { postgre } = require("pg");
 const dbFile = require("./dbpass.json");
 client.commands = new Discord.Collection(); //Collection extends Map. A Map with additional utility methods. 
 //This is used throughout discord.js rather than Arrays for anything that has an ID, for significantly improved 
@@ -43,7 +43,10 @@ fs.readdir("./commands/", (err, files) =>{
 });
 
 //mySQL Connection:
-var con_database = mysql.createConnection({process.env.JAWSDB_URL});
+const con_database = new postgre({
+	  connectionString: process.env.DATABASE_URL,
+  	  ssl: true,
+});
 
 con_database.connect(err =>{
 	if(err) console.log(err);
