@@ -69,12 +69,11 @@ client.on("message", async (message) =>{
 			err ? reject(err) : resolve({ result, fields });
 			console.log(result);
 			if(result.length===0){
-				let sql = `INSERT INTO prefixes (guildid, prefix) VALUES ('${message.guild.id}', '${config.prefix}')`;
+				let sql = `INSERT INTO prefixes (guildid, prefix) VALUES ('${message.guild.id}', '${process.env.prefix}')`;
 				con_database.query(sql);
 				prefix = "?";
 			} 
 			else{
-				
 				prefix = `${result.prefix}`;
 			}
 		});
