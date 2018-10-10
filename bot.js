@@ -75,7 +75,7 @@ client.on("message", async (message) =>{
 			if(result.length===0){
 				let sql = `INSERT INTO prefixes (guildid, prefix) VALUES ('${message.guild.id}', '${config.prefix}')`;
 				con_database.query(sql);
-				prefix = config.prefix;
+				prefix = "?";
 			} 
 			else{
 				prefix = `${result[0].prefix}`;
