@@ -67,12 +67,14 @@ client.on("message", async (message) =>{
 	const { result, fields } = await new Promise((resolve, reject) => {
 		con_database.query(`SELECT * FROM prefixes WHERE guildid = '${message.guild.id}'` , (err, result, fields) =>{
 			err ? reject(err) : resolve({ result, fields });
+			console.log(result);
 			if(result.length===0){
 				let sql = `INSERT INTO prefixes (guildid, prefix) VALUES ('${message.guild.id}', '${config.prefix}')`;
 				con_database.query(sql);
 				prefix = "?";
 			} 
 			else{
+				
 				prefix = `${result[0].prefix}`;
 			}
 		});
