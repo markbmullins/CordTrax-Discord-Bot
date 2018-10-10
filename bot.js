@@ -14,7 +14,7 @@ client.queue = [];
 client.queueIndex;
 
 
-client.login(tokenfile.token); //Logs in to the application. Token stored in tokenfile.json required above
+client.login(process.env.token); //Logs in to the application. Token stored in tokenfile.json required above
 //var queue;
 //var queueIndex;
 //When bot starts up:
