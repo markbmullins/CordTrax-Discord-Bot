@@ -1,10 +1,7 @@
 const Discord = require("discord.js"); //includes the discord.js node package
 const client = new Discord.Client(); //Client class of the npm package to interact with the discord api
-const config = require("./config.json"); //includes the config file
-const tokenfile = require("./tokenfile.json"); //includes token file
 const fs = require("fs"); //includes the file system package
 const { postgre } = require("pg");
-const dbFile = require("./dbpass.json");
 client.commands = new Discord.Collection(); //Collection extends Map. A Map with additional utility methods. 
 //This is used throughout discord.js rather than Arrays for anything that has an ID, for significantly improved 
 //performance and ease-of-use.
