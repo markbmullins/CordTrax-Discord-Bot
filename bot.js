@@ -100,7 +100,7 @@ client.on("message", async (message) =>{
 		return;
 	}//end if
 	*/
-
+	console.log(prefix);
 	let args = messageContent.slice(1);
 	let commandfile = client.commands.get(cmd.slice(prefix.length));
 	if(commandfile) commandfile.run(client,message,args,prefix,con_database);
