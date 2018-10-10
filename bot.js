@@ -63,7 +63,7 @@ client.on("message", async (message) =>{
 	if (message.channel.type === "dm") return; 
 	
 	//Getting prefix from mySQL database:
-	let prefix;
+	let prefix = "?";
 	const { result, fields } = await new Promise((resolve, reject) => {
 		con_database.query(`SELECT * FROM prefixes WHERE guildid = '${message.guild.id}'` , (err, result, fields) =>{
 			err ? reject(err) : resolve({ result, fields });
@@ -71,7 +71,7 @@ client.on("message", async (message) =>{
 			if(result.length===0){
 				let sql = `INSERT INTO prefixes (guildid, prefix) VALUES ('${message.guild.id}', '${process.env.prefix}')`;
 				con_database.query(sql);
-				prefix = "?";
+				prefix = process.env.prefix;
 			} 
 			else{
 				prefix = `${result.prefix}`;
@@ -100,7 +100,7 @@ client.on("message", async (message) =>{
 		return;
 	}//end if
 	*/
-	console.log(prefix);
+
 	let args = messageContent.slice(1);
 	let commandfile = client.commands.get(cmd.slice(prefix.length));
 	if(commandfile) commandfile.run(client,message,args,prefix,con_database);
