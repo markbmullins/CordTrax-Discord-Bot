@@ -43,12 +43,7 @@ fs.readdir("./commands/", (err, files) =>{
 });
 
 //mySQL Connection:
-var con_database = mysql.createConnection({
-	host: "localhost",
-	user: "root",
-	password: dbFile.databasePass,
-	database: "CordTrax"
-});
+var con_database = mysql.createConnection({process.env.JAWSDB_URL});
 
 con_database.connect(err =>{
 	if(err) console.log(err);
