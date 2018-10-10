@@ -68,18 +68,19 @@ client.on("message", async (message) =>{
 		con_database.query(`SELECT * FROM prefixes WHERE guildid = '${message.guild.id}'` , (err, result, fields) =>{
 			err ? reject(err) : resolve({ result, fields });
 			console.log(result);
-			if(result.rows===0){
+			if(result.rows[0].length===0){
+				console.log("In the if clause");
 				let query = `INSERT INTO prefixes (guildid, prefix) VALUES ('${message.guild.id}', '${process.env.prefix}')`;
 				con_database.query(query);
 				prefix = process.env.prefix;
 			} 
 			else{
 				prefix = `${result.fields[0].prefix}`;
-				console.log(prefix);
+				console.log("In the else clause");
 			}
 		});
 	});
-
+	 console.log(prefix);
 	
 	let messageContent = message.content.split(" ");
 	let cmd = messageContent[0].toLowerCase(); //type: string | includes prefix at this point
