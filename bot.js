@@ -75,7 +75,7 @@ client.on("message", async (message) =>{
 				prefix = process.env.prefix;
 			} 
 			else{
-				prefix = `${result.fields[0].prefix}`;
+				prefix = `${result.rows[0].prefix}`;
 				console.log("In the else clause");
 			}
 		});
