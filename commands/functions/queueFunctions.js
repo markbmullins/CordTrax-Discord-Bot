@@ -1,10 +1,9 @@
 const Discord = require("discord.js");
 const YTDL = require("ytdl-core");
 const YouTube = require("simple-youtube-api");
-const apiKeyFile = require("../../apiKey.json");
 const tools = require("./tools");
-const youtubeApiKey = apiKeyFile.apiKey;
-const youtube = new YouTube(apiKeyFile.apiKey);
+const youtubeApiKey = process.env.API_KEY;
+const youtube = new YouTube(process.env.API_KEY);
 const maxQueueSize = 150000;
 
 module.exports = {
