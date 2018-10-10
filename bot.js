@@ -63,7 +63,7 @@ client.on("message", async (message) =>{
 	if (message.channel.type === "dm") return; 
 	
 	//Getting prefix from mySQL database:
-	let prefix = "?";
+	let prefix = "testing";
 	const { result, fields } = await new Promise((resolve, reject) => {
 		con_database.query(`SELECT * FROM prefixes WHERE guildid = '${message.guild.id}'` , (err, result, fields) =>{
 			err ? reject(err) : resolve({ result, fields });
@@ -75,6 +75,7 @@ client.on("message", async (message) =>{
 			} 
 			else{
 				prefix = `${result.fields[0].prefix}`;
+				console.log(prefix);
 			}
 		});
 	});
