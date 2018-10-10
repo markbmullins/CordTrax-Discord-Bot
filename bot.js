@@ -68,7 +68,7 @@ client.on("message", async (message) =>{
 		con_database.query(`SELECT * FROM prefixes WHERE guildid = '${message.guild.id}'` , (err, result, fields) =>{
 			err ? reject(err) : resolve({ result, fields });
 			console.log(result);
-			if(result.rows[0].length===0){
+			if(!result.rows[0]){
 				console.log("In the if clause");
 				let query = `INSERT INTO prefixes (guildid, prefix) VALUES ('${message.guild.id}', '${process.env.prefix}')`;
 				con_database.query(query);
