@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-const queueFunctions = require("./queueFunctions");
+const queueFunctions = require("./queueFunctions.js");
 module.exports = {
 	
 	fancyTimeFormat: function fancyTimeFormat (time){   
@@ -104,13 +104,11 @@ module.exports = {
 			}//end else if
 			//if !add <"song"> and song is one word
 			else if(args[0].startsWith("\"")){
-				//console.log("Correct case");
 				//Parsing input
 				queue = defaultQueue;
 				args[0] = args[0].replace("\"",""); //removes first "
 				if(args[0].endsWith("\"")) args[0] = args[0].slice(0, -1); //removes last "
 				song = args[0];
-				//console.log(song);
 			}//end else if(args[0].startsWith("\"")
 
 			//if !add <URL>

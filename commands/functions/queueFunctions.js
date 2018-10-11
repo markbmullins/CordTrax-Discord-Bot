@@ -1,7 +1,6 @@
 const Discord = require("discord.js");
 const YTDL = require("ytdl-core");
 const YouTube = require("simple-youtube-api");
-const tools = require("./tools");
 const youtubeApiKey = process.env.API_KEY;
 const youtube = new YouTube(process.env.API_KEY);
 const maxQueueSize = 150000;
@@ -14,20 +13,20 @@ module.exports = {
 					(err, result) =>{
 						if(err) reject(err);
 						else{
-							let sql;
-							if(result.length===0){
+							let query;
+							if(!result.rows[0]){
 								url = url + ";";
-								sql = `INSERT INTO queues (userid, queueName, queue) VALUES ('${message.author.id}', '${queueName}', '${url}')`;
+								query = `INSERT INTO queues (userid, queueName, queue) VALUES ('${message.author.id}', '${queueName}', '${url}')`;
 							} 
 							else{
-								let currentQueue = result[0].queue;
+								let currentQueue = result.rows[0].queue;
 								if (currentQueue.length == maxQueueSize){ //length of medium text
 									return message.reply("Your queue has reached it's max size limit.");
 								}
 								currentQueue = currentQueue + url + ";";
-								sql = `UPDATE queues SET queue = '${currentQueue}' WHERE userid = '${message.author.id}' and queuename = '${queueName}'`;
+								query = `UPDATE queues SET queue = '${currentQueue}' WHERE userid = '${message.author.id}' and queuename = '${queueName}'`;
 							}
-						resolve(con_database.query(sql));
+						resolve(con_database.query(query));
 						}//end else
 					}//end (err,result) =>
 				)//end con_database.query
@@ -50,13 +49,12 @@ module.exports = {
 					(err, result) =>{
 						if(err) reject(err);
 						else{
-							if(result.length===0){
+							if(!result.rows[0]){
 								let queueArray = [];
 								resolve(queueArray);
 							}//end if
 							else{
-								let currentQueue = result[0].queue;
-								console.log(result[0].queue);
+								let currentQueue = result.rows[0].queue;
 								let queueArray = currentQueue.split(";");
 								queueArray.pop(); //Last semicolon results in empty element of array at the end
 								resolve(queueArray);
@@ -75,9 +73,9 @@ module.exports = {
 				//console.log(videos);
 				let index = 0;
 				message.channel.send(`
-		__**Song selection:**__
-		${videos.map(video2 => `**${++index} -** ${video2.title}`).join('\n')}
-		Please provide a value to select one of the search results ranging from 1-10.`);//end message.send
+__**Song selection:**__
+${videos.map(video2 => `**${++index} -** ${video2.title}`).join('\n')}
+Please provide a value to select one of the search results ranging from 1-10.`);//end message.send
 				try{
 					var response = await message.channel.awaitMessages(message2 => message2.content > 0 && message2.content < 11, {
 									maxMatches: 1,
@@ -120,8 +118,8 @@ module.exports = {
 				queueString = queueString + queue[count] + ";";
 			}
 			//Updating database
-			let sql = `UPDATE queues SET queue = '${queueString}' WHERE userid = '${message.author.id}' and queuename = '${queueName}'`;
-			resolve(con_database.query(sql));
+			let query = `UPDATE queues SET queue = '${queueString}' WHERE userid = '${message.author.id}' and queuename = '${queueName}'`;
+			resolve(con_database.query(query));
 			reject("Bad parameter");
 		});//end promise
 	}//end updatequeue

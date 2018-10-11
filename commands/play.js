@@ -18,8 +18,8 @@ function playQueue(client, connection, message){
 
 function playSingleSong(song, connection, message){
 	const streamOptions = {bitrate : 40000};
-	queue.dispatcher = connection.playStream(YTDL(song[0], {filter:"audioonly"}), streamOptions);
-	queue.dispatcher.on("end", ()=>{
+	song.dispatcher = connection.playStream(YTDL(song[0], {filter:"audioonly"}), streamOptions);
+	song.dispatcher.on("end", ()=>{
 			connection.disconnect();
 	});
 }
@@ -115,7 +115,7 @@ For information on adding songs to your queue, use the command ${prefix}add help
 		else if(!notAQueueFlag){
 			client.queue = await queueFunctions.getQueue(args[0], message, con_database); //Queue should return false if it does not exist.
 			client.queueIndex = 0;
-			if(!client.queue){
+			if(!client.queue[0]){
 				return message.reply(`That queue does not exist. Use the add command to create a new queue or ${prefix}play help for help.`);
 			}
 		}//end else if (!notAQueueFlag)
@@ -136,7 +136,6 @@ For information on adding songs to your queue, use the command ${prefix}add help
 			//play URL
 		}
 		else{
-			console.log("Else triggered", "Url: ", url, typeof(url));
 			var songToPlay = [url];
 			client.queueIndex = 0;
 			message.member.voiceChannel.join()

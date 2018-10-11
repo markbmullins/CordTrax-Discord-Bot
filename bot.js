@@ -63,45 +63,39 @@ client.on("message", async (message) =>{
 	if (message.channel.type === "dm") return; 
 	
 	//Getting prefix from mySQL database:
-	let prefix = "testing";
 	const { result, fields } = await new Promise((resolve, reject) => {
 		con_database.query(`SELECT * FROM prefixes WHERE guildid = '${message.guild.id}'` , (err, result, fields) =>{
 			err ? reject(err) : resolve({ result, fields });
-			console.log(result);
 			if(!result.rows[0]){
-				console.log("In the if clause");
 				let query = `INSERT INTO prefixes (guildid, prefix) VALUES ('${message.guild.id}', '${process.env.prefix}')`;
 				con_database.query(query);
 				prefix = process.env.prefix;
 			} 
 			else{
 				prefix = `${result.rows[0].prefix}`;
-				console.log("In the else clause");
 			}
 		});
 	});
-	 console.log(prefix);
 	
 	let messageContent = message.content.split(" ");
 	let cmd = messageContent[0].toLowerCase(); //type: string | includes prefix at this point
-	/*
+	
 	if(cmd.substring(0, prefix.length) != prefix){
 		//Updating xp when users message:
-		con_database.query(`SELECT * FROM xp WHERE id = '${message.author.id}' and guildid = '${message.guild.id}'` , (err, rows) => {
+		con_database.query(`SELECT * FROM xp WHERE id = '${message.author.id}' and guildid = '${message.guild.id}'` , (err, result) => {
 			if(err) throw (err);
-			let sql;
-			if(rows.length < 1){
-				sql = `INSERT INTO xp (id, xp, guildid) VALUES ('${message.author.id}', ${generateXp()},'${message.guild.id}')`;
+			let query;
+			if(!result.rows[0]){
+				query = `INSERT INTO xp (id, xp, guildid) VALUES ('${message.author.id}', ${generateXp()},'${message.guild.id}')`;
 			} 
 			else{
-				let xp = rows[0].xp;
-				sql = `UPDATE xp SET xp = ${xp + generateXp()} WHERE id = '${message.author.id}' and guildid = '${message.guild.id}'`;
+				let xp = result.rows[0].xp;
+				query = `UPDATE xp SET xp = ${xp + generateXp()} WHERE id = '${message.author.id}' and guildid = '${message.guild.id}'`;
 			}
-			con_database.query(sql);
+			con_database.query(query);
 		});//end con_database.query()
 		return;
-	}//end if
-	*/
+	}//end i
 
 	let args = messageContent.slice(1);
 	let commandfile = client.commands.get(cmd.slice(prefix.length));
