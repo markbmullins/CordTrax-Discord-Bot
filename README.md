@@ -4,15 +4,15 @@
 CordTrax is a work in progress Discord bot that plays music and has a few moderator functions. It is a personal project undertaken by me to learn Javascript, Node.js, Discord.js and other libraries. It is my first large project, and attempt to take a concept from idea to complete working software. 
 It is now hosted on Heroku, and can be installed on your own Discord server
 
-## Adding CordTrax to your server:  
+## Adding CordTrax to your server  
 Click [this link](https://discordapp.com/oauth2/authorize?client_id=489652777027633173&scope=bot) and select the server you would like to invite the bot to in the drop down box. Click the blue "authorize" box. If you would like to use commands like ban, warn, kick, make sure the bot has Administrator privileges.
 
 ![This image is not available, sorry.](https://i.imgur.com/sD2ikiG.png)
 
-## Help:
+## Help  
 For help using CordTrax, see the [help document here.](https://github.com/markbmullins/CordTrax-Discord-Bot/blob/master/HELP.md)
 
-## Selected Demos:
+## Selected Demos  
 The bot has several moderation commands, and some music commands. I will be adding more commands as I go. 
 	
 #### 8ball:  
