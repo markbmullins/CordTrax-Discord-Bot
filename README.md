@@ -10,7 +10,7 @@ Click [this link](https://discordapp.com/oauth2/authorize?client_id=489652777027
 
 ## Commands
 The bot has several moderation commands, and some music commands. I will be adding more commands as I go. 
-
+	
 #### 8ball:  
 ![This GIF is not available, sorry.](https://i.imgur.com/ZjHlfV0.gif)
 

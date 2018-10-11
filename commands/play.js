@@ -35,7 +35,7 @@ module.exports.run = async (client,message,args,prefix,con_database) => {
 	const voiceChannel = message.member.voiceChannel;
 	var url;
 	var song;
-	var notAQueueFlag = false;
+	var QueueFlag = false;
 	const helpMessage = helpMessages.play.replace(/\$prefix/g, `${prefix}`);
 
 	//Checking permissions
@@ -65,6 +65,7 @@ module.exports.run = async (client,message,args,prefix,con_database) => {
 			tempArgs[index-1] = tempArgs[index-1].replace("\"","");
 			song = args[0] + " " + tempArgs.join(" ");
 			url = await queueFunctions.getURL(message, song);
+			notAQueueFlag = true;
 		}//end else if(args[0].startsWith("\"")
 
 		//[✔] Catching single quotes error
