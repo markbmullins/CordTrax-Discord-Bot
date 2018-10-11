@@ -1,20 +1,17 @@
 const Discord = require("discord.js"); //includes the discord.js node package
 const client = new Discord.Client(); //Client class of the npm package to interact with the discord api
 const fs = require("fs"); //includes the file system package
-const { Client } = require("pg");
+const { Client } = require("pg"); //PostgreSQL database
 client.commands = new Discord.Collection(); //Collection extends Map. A Map with additional utility methods. 
 //This is used throughout discord.js rather than Arrays for anything that has an ID, for significantly improved 
 //performance and ease-of-use.
 
-
 client.queue = [];
 client.queueIndex;
 
+client.login(process.env.token); //Logs in to the application.
 
-client.login(process.env.token); //Logs in to the application. Token stored in tokenfile.json required above
-//var queue;
-//var queueIndex;
-//When bot starts up:
+//Online message
 client.on("ready", async ()=>{
 	console.log(`${client.user.username} is online on ${client.guilds.size} servers.`)
 });
@@ -39,12 +36,11 @@ fs.readdir("./commands/", (err, files) =>{
 	});
 });
 
-//mySQL Connection:
+//PostgreSQL Connection:
 const con_database = new Client({
 	  connectionString: process.env.DATABASE_URL,
   	  ssl: true,
 });
-
 con_database.connect(err =>{
 	if(err) console.log(err);
 		console.log("Connected to database.");
@@ -59,10 +55,10 @@ function generateXp() {
 
 //When a message is recieved by the bot:
 client.on("message", async (message) =>{
-	if(message.author.bot) return;
-	if (message.channel.type === "dm") return; 
+	if(message.author.bot) return; //Doesn't respond to bots
+	if (message.channel.type === "dm") return; //Doesn't respond to DMs
 	
-	//Getting prefix from mySQL database:
+	//Getting prefix from Heroku PostgreSQL database:
 	const { result, fields } = await new Promise((resolve, reject) => {
 		con_database.query(`SELECT * FROM prefixes WHERE guildid = '${message.guild.id}'` , (err, result, fields) =>{
 			err ? reject(err) : resolve({ result, fields });
@@ -80,6 +76,7 @@ client.on("message", async (message) =>{
 	let messageContent = message.content.split(" ");
 	let cmd = messageContent[0].toLowerCase(); //type: string | includes prefix at this point
 	
+	//If message does not start with the prefix:
 	if(cmd.substring(0, prefix.length) != prefix){
 		//Updating xp when users message:
 		con_database.query(`SELECT * FROM xp WHERE id = '${message.author.id}' and guildid = '${message.guild.id}'` , (err, result) => {
@@ -95,12 +92,16 @@ client.on("message", async (message) =>{
 			con_database.query(query);
 		});//end con_database.query()
 		return;
-	}//end i
-
-	let args = messageContent.slice(1);
-	let commandfile = client.commands.get(cmd.slice(prefix.length));
-	if(commandfile) commandfile.run(client,message,args,prefix,con_database);
-	
+	}//end if
+	//else if message does start with prefix
+	else if(cmd.substring(0, prefix.length) == prefix){
+		let args = messageContent.slice(1);
+		let commandfile = client.commands.get(cmd.slice(prefix.length));
+		//If command exists, run the command
+		if(commandfile) commandfile.run(client,message,args,prefix,con_database);
+		else{return message.reply(`Invalid command. Type ${prefix}help for help.`)}
+	}//end else if
+	else{return;}
 });//end client.on("message")
 
 //to do
