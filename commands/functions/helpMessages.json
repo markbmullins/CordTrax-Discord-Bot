@@ -1,8 +1,8 @@
 {
-	"eightball" : "\n8ball command help:\n$prefix8ball <Question here> to ask the 8ball a question.\nThe sentence must be 2 words or longer.",
-    "add" : "\nAdd command help:\n$prefixadd <url> to add to your default queue, \n$prefixadd <queueName> <url> to add a URL to a specified queue, \n$prefixadd \"<Song Name>\" to search Youtube for your song and add it to your default queue, or \n$prefixadd <queueName> \"<Song Name>\" to search Youtube for your song and add it to a specified queue. \nPlease don't use spaces in your queue names, and put double quotes around song names.",
-	"addrole" : "\nAddrole command help: \nUse the form $prefixaddrole @user <role>\n The role must already exist and is case sensitive.",
-	"ban" : "\n",
+	"eightball" : "\n8ball command help: \n$prefix8ball <Question here> to ask the 8ball a question. \nThe sentence must be 2 words or longer.",
+    "add" : "\nAdd command help: \n$prefixadd <url> to add to your default queue, \n$prefixadd <queueName> <url> to add a URL to a specified queue, \n$prefixadd \"<Song Name>\" to search Youtube for your song and add it to your default queue, or \n$prefixadd <queueName> \"<Song Name>\" to search Youtube for your song and add it to a specified queue. \nPlease don't use spaces in your queue names, and put double quotes around song names.",
+	"addrole" : "\nAddrole command help: \nUse the form $prefixaddrole @user <role> \nThe role must already exist and is case sensitive.",
+	"ban" : "\nBan command help: \nUse $prefixban @user to ban a user. \nThe user cannot be banned if the have the permission Manage Members.",
 	"botinfo" : "\n",
 	"cat" : "\n",
 	"getqueue" : "\n",
