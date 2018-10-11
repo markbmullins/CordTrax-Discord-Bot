@@ -1,7 +1,11 @@
 const Discord = require("discord.js");
 const commando = require("discord.js-commando");
+const helpMessages = require("./functions/helpMessages.json");
 
-module.exports.run = async (client, message, args, prefix, con_database) => {
+module.exports.run = async (client,message,args,prefix,con_database) => {
+	const helpMessage = helpMessages.join.replace(/\$prefix/g, `${prefix}`);
+	//if help 
+	if(args[0] === "help") return message.reply(`${helpMessage}`);
 	
 	if (!message.guild) return;
 	if(message.member.voiceChannel){

@@ -2,12 +2,16 @@ const Discord = require("discord.js");
 const fs = require("fs");
 const ms = require("ms");
 let warns = JSON.parse(fs.readFileSync("./warnings.json","utf8"));
+const helpMessages = require("./functions/helpMessages.json");
 
 //To do
 //If incidents doesnt exist, create it
 //Allow users to change incidents channel name
 
-module.exports.run = async (client, message, args) => {
+module.exports.run = async (client,message,args,prefix,con_database) => {
+	const helpMessage = helpMessages.warn.replace(/\$prefix/g, `${prefix}`);
+	//if help 
+	if(args[0] === "help") return message.reply(`${helpMessage}`);
 	//!warn @user <reason>
 	if(!message.member.hasPermission("MANAGE_MEMBERS")) return message.reply("You don't have permission to do that.");
 	let wUser = message.guild.member(message.mentions.users.first()) || message.guild.members.get(args[0]);

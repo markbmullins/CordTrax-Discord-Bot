@@ -1,11 +1,10 @@
 const Discord = require("discord.js");
 const YTDL = require("ytdl-core");
-const queueFunctions = require("./functions/queueFunctions")
+const queueFunctions = require("./functions/queueFunctions");
+const helpMessages = require("./functions/helpMessages.json");
 
 module.exports.run = async (client,message,args,prefix,con_database) => {
-	var helpMessage = (`
-
-		`);
+	const helpMessage = helpMessages.getqueue.replace(/\$prefix/g, `${prefix}`);
 	//!inqueue
 	if(!args[0]){
 			message.reply("Please provide a queue to look up.");

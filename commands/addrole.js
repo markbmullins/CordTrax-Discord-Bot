@@ -1,8 +1,11 @@
 const Discord = require("discord.js");
+const helpMessages = require("./functions/helpMessages.json");
 
-module.exports.run = async (client, message, args) => {
+module.exports.run = async (client,message,args,prefix,con_database) => {
 	//!addrole @user <role(case sensitive)>
-
+	const helpMessage = helpMessages.addrole.replace(/\$prefix/g, `${prefix}`);
+	//if help 
+	if(args[0] === "help") return message.reply(`${helpMessage}`);
 	//Checking permissions of person sending message
 	if(!message.member.hasPermission("MANAGE_MEMBERS")) return message.reply("You don't have permission to do that.");
 	

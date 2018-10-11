@@ -1,11 +1,15 @@
-const Discord = require("discord.js")
+const Discord = require("discord.js");
+const helpMessages = require("./functions/helpMessages.json");
 
 //Tests and to do:
 //1. See if Admin can kick user (functionality check)
 //2. See if regular user can kick user (permissions check)
 //3. Generalize "incidents" and allow user to modify channel name.
 //4. Change color to orange and generalize color scheme (create red variable)
-module.exports.run = async (client, message, args) => {
+module.exports.run = async (client,message,args,prefix,con_database) => {
+	const helpMessage = helpMessages.kick.replace(/\$prefix/g, `${prefix}`);
+	//if help 
+	if(args[0] === "help") return message.reply(`${helpMessage}`);
 	//Parsing input
 	let kUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
 	if(!kUser) return message.channel.send("Couldn't find user.");

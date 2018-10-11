@@ -1,6 +1,10 @@
-const Discord = require("discord.js")
+const Discord = require("discord.js");
+const helpMessages = require("./functions/helpMessages.json");
 
-module.exports.run = async (client, message, args) => {
+module.exports.run = async (client,message,args,prefix,con_database) => {
+	const helpMessage = helpMessages.serverinfo.replace(/\$prefix/g, `${prefix}`);
+	//if help 
+	if(args[0] === "help") return message.reply(`${helpMessage}`);
 	let serverIcon = message.guild.iconURL;
 	let serverEmbed = new Discord.RichEmbed()
 	.setDescription("Server information")

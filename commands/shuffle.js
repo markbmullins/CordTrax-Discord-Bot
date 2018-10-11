@@ -2,6 +2,7 @@ const Discord = require("discord.js");
 const YTDL = require("ytdl-core");
 const queueFunctions = require("./functions/queueFunctions");
 const tools = require("./functions/tools");
+const helpMessages = require("./functions/helpMessages.json");
 
 //TO DO:
 //Add help message.
@@ -23,9 +24,7 @@ async function shuffle(array) {
 }
 
 module.exports.run = async (client,message,args,prefix,con_database) => {
-	var helpMessage = (`
-
-		`);
+	const helpMessage = helpMessages.shuffle.replace(/\$prefix/g, `${prefix}`);
 	if(args[0] === "help"){
 		return message.reply(helpMessage);
 	}

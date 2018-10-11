@@ -1,8 +1,12 @@
-const Discord = require("discord.js")
+const Discord = require("discord.js");
+const helpMessages = require("./functions/helpMessages.json");
 //To do: include clipart into
 // https://openclipart.org/detail/297747/record-player
 //
-module.exports.run = async (client, message, args) => {
+module.exports.run = async (client,message,args,prefix,con_database) => {
+	const helpMessage = helpMessages.botinfo.replace(/\$prefix/g, `${prefix}`);
+	//if help 
+	if(args[0] === "help") return message.reply(`${helpMessage}`);
 	let botIcon = client.user.displayAvatarURL;
 	let botembed = new Discord.RichEmbed()
 	.setDescription("Bot information")

@@ -1,12 +1,11 @@
 const Discord = require("discord.js");
 const YTDL = require("ytdl-core");
+const helpMessages = require("./functions/helpMessages.json");
 //to do:
 module.exports.run = async (client,message,args,prefix,con_database) => {
+	const helpMessage = helpMessages.skip.replace(/\$prefix/g, `${prefix}`);
 	if(args[0] === "help"){
-		return message.reply(`
-Skip command help: Use ${prefix}skip to skip to the next song in the queue if playing a queue, 
-or end the current song if only playing one song. You must be in the same voice channel
-as the bot, and the bot must be playing music.`);
+		return message.reply(helpMessage);
 	}
 	if (!message.member.voiceChannel) return message.reply('You are not in a voice channel.');
 	if(message.guild.voiceConnection){//Checks if bot is in voice channel

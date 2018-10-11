@@ -1,7 +1,10 @@
-const Discord = require("discord.js")
+const Discord = require("discord.js");
+const helpMessages = require("./functions/helpMessages.json");
 
-module.exports.run = async (client, message, args) => {
+module.exports.run = async (client,message,args,prefix,con_database) => {
+	const helpMessage = helpMessages.eightball.replace(/\$prefix/g, `${prefix}`);
 	//!8ball <question afadfasdfa>
+	if(args[0] === "help") return message.reply(`${helpMessage}`);
 	if(!args[1]) return message.reply("Please ask a full question.");
 	let replies = ["Yes.","No.","Maybe.","Ask me again later.","I don't know."];
 

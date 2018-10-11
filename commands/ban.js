@@ -1,4 +1,5 @@
-const Discord = require("discord.js")
+const Discord = require("discord.js");
+const helpMessages = require("./functions/helpMessages.json");
 	
 //Tests and to do:
 //1. See if Admin can ban user (functionality check)
@@ -6,7 +7,10 @@ const Discord = require("discord.js")
 //3. Generalize "incidents" and allow user to modify channel name.
 //4. Change color to deep red and generalize color scheme (create red variable)
 //5. if incidents doesn't exist create it
-module.exports.run = async (client, message, args) => {
+module.exports.run = async (client,message,args,prefix,con_database) => {
+	const helpMessage = helpMessages.ban.replace(/\$prefix/g, `${prefix}`);
+	//if help 
+	if(args[0] === "help") return message.reply(`${helpMessage}`);
 	
 	//Parsing input
 	let bUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));

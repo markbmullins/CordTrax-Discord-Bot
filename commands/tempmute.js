@@ -1,12 +1,16 @@
 const Discord = require("discord.js")
 const ms = require("ms");
+const helpMessages = require("./functions/helpMessages.json");
 
 //To do and tests
 //Add rich embed, send message to incidents channel and delete message in chat
 //Generalize hex colors
 //If incidents doesnt exist, create it
 //Allow users to change incidents channel name
-module.exports.run = async (client, message, args) => {
+module.exports.run = async (client,message,args,prefix,con_database) => {
+	const helpMessage = helpMessages.tempmute.replace(/\$prefix/g, `${prefix}`);
+	//if help 
+	if(args[0] === "help") return message.reply(`${helpMessage}`);
 	//!tempmute @user <time>
 	let  toMute = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
 	if(!toMute) return message.reply("Couldn't find user.");

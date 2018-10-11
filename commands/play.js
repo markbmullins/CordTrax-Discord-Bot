@@ -1,6 +1,7 @@
 const Discord = require("discord.js");
 const queueFunctions = require("./functions/queueFunctions");
 const YTDL = require("ytdl-core");
+const helpMessages = require("./functions/helpMessages.json");
 
 function playQueue(client, connection, message){
 	const streamOptions = {bitrate : 40000};
@@ -35,13 +36,7 @@ module.exports.run = async (client,message,args,prefix,con_database) => {
 	var url;
 	var song;
 	var notAQueueFlag = false;
-	const helpMessage = `
-Play command help:
-${prefix}play <url> to play a Youtube url, 
-${prefix}play <queueName> to begin playing a queue,
-${prefix}play "<Song Name>" to search Youtube for your song and play it.
-Please don't use spaces in your queue names, and put double quotes around song names.
-For information on adding songs to your queue, use the command ${prefix}add help`;
+	const helpMessage = helpMessages.play.replace(/\$prefix/g, `${prefix}`);
 
 	//Checking permissions
 	if(!voiceChannel){

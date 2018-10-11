@@ -1,6 +1,11 @@
 const Discord = require("discord.js");
+const helpMessages = require("./functions/helpMessages.json");
 
 module.exports.run = async (client,message,args,prefix,con_database) => {
+	const helpMessage = helpMessages.stop.replace(/\$prefix/g, `${prefix}`);
+	//if help 
+	if(args[0] === "help") return message.reply(`${helpMessage}`);
+
 	if(message.guild.voiceConnection){//Checks if bot is in voice channel
 		if(message.member.voiceChannel === message.guild.me.voiceChannel){ //Checks if bot is in same  channel as messager
 			message.guild.voiceConnection.disconnect(); //Leave

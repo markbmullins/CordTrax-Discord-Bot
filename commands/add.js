@@ -1,6 +1,7 @@
 const Discord = require("discord.js");
 const queueFunctions = require("./functions/queueFunctions");
 const tools = require("./functions/tools");
+const helpMessages = require("./functions/helpMessages.json");
 
 //to do:
 //Add contents of queue to richEmbed
@@ -11,14 +12,7 @@ module.exports.run = async (client,message,args,prefix,con_database) => {
 	//!add <Queue2> <url>      |adds to queue2
 	//!add <"song">            |searches youtube, adds song to default queue
 	//!add <queue2> <"song">   |searches youtube, adds song to queue2
-	const helpMessage = `
-Add command help:
-${prefix}add <url> to add to your default queue, 
-${prefix}add <queueName> <url> to add a URL to a specified queue, 
-${prefix}add "<Song Name>" to search Youtube for your song and add it to your default queue, or 
-${prefix}add <queueName> "<Song Name>" to search Youtube for your song and add it to a specified queue. 
-Please don't use spaces in your queue names, and put double quotes around song names.`;
-
+	const helpMessage = helpMessages.add.replace(/\$prefix/g, `${prefix}`);
 	var	input = await tools.inputParse(message,args,prefix,helpMessage);
 	var queueName = input[0];
 	var URL = input[1];
