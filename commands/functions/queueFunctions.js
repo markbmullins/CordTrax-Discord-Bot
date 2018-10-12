@@ -109,6 +109,14 @@ Please provide a value to select one of the search results ranging from 1-10.`);
 			reject("Bad parameter");
 		});//end promise
 	},//end getTitiles
+	deleteQueue: async function deleteQueue(queueName, message, con_database){
+		return new Promise((resolve, reject) => {
+			//Updating database
+			let query = `DELETE FROM queues WHERE queuename = '${queueName}' AND userid = '${message.author.id}'`;
+			resolve(con_database.query(query));
+			reject("Bad parameter");
+		});//end promise
+	},//end updatequeue
 	updateQueue: async function updateQueue(queue, queueName, message, con_database){
 		return new Promise((resolve, reject) => {
 			//Parsing queue back into string of URLs

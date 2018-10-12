@@ -1,7 +1,5 @@
 const Discord = require("discord.js");
-const YTDL = require("ytdl-core");
 const queueFunctions = require("./functions/queueFunctions");
-const tools = require("./functions/tools");
 const helpMessages = require("./functions/helpMessages.json");
 
 //TO DO:

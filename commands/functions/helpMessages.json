@@ -5,6 +5,7 @@
 	"ban" : "\nBan command help: \nUse $prefixban @user to ban a user. \nThe user cannot be banned if the have the permission Manage Members.",
 	"botinfo" : "\n",
 	"cat" : "\n",
+	"deletequeue" : "\nDeletequeue command help: \nUse the form $prefixdeletequeue <queueName> and reply yes to the prompt to delete the queue. \nThis is permament. The queue name is case sensitive.",
 	"getqueue" : "\n",
 	"inqueue" : "\n",
 	"join" : "\n",

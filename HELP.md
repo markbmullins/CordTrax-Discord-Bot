@@ -35,6 +35,9 @@ To stop the bot when it is playing, type ```?stop``` and the bot will leave the 
 ### Shuffling the queue:  
 To shuffle a queue type ```?shuffle QUEUE_NAME```
 
+### Deleting a queue:  
+To delete a queue type ```?deletequeue QUEUE_NAME``` and reply yes to the prompt. The queue name is case sensitive.
+
 ### Changing your prefix:  
 In order to change your prefix type ```?prefix NEW_PREFIX``` For example, to change
 your prefix from the default prefix to ! you would type: ```?prefix !```
