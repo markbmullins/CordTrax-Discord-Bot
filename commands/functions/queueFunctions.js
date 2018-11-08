@@ -4,7 +4,6 @@ const YouTube = require("simple-youtube-api");
 const youtubeApiKey = process.env.API_KEY;
 const youtube = new YouTube(process.env.API_KEY);
 const maxQueueSize = 150000;
-const Queue = require("./queueClass");
 
 module.exports = {
 	addToQueue: async function addToQueue(queueName, url, message, con_database){
@@ -186,5 +185,54 @@ Please provide a value to select one of the search results ranging from 1-10.`);
 			titlesString = titlesString + titles[count] + "\n";	
 		}
 		return titlesString;
+	},
+	song: class Song{
+		constructor(title, url){
+		    this._title = title;
+			this._URL = url;
+		}
+		get title(){
+			return this._title;
+		}
+		get URL(){
+			return this._URL;
+		}
+		updateURL(message){
+			this._URL = this.getUrl(message,this._title);
+		}
+		updateTitle(){
+			return;
+		}
+	},	
+	queue: class Queue{
+	    constructor(name){
+	    	this._name = name;
+	    	this._songs = [];
+	    }
+	    addSong(song){
+	    	this._songs.push(song);
+	    }
+	    get length(){
+			return this._songs.length;
+	    }
+	    get name() {
+	        return this._name;
+	    }
+		get titles() {
+			var numSongs = this._songs.length;
+			var titles = []
+			for(var i=0; i<numSongs; i++){
+				titles[i] = this._songs[i].title;
+			}
+	        return titles;
+	    }
+	    get URLs(){
+	    	var numSongs = this._songs.length;
+			var URLs = []
+			for(var i=0; i<numSongs; i++){
+				URLs[i] = this._songs[i].URL;
+			}
+	        return URLs;
+	    }
 	}
 };//end module.exports

@@ -17,7 +17,7 @@ module.exports.run = async (client,message,args,prefix,con_database) => {
 	if(!typeof(input[0]) === 'string'){
 		try{
 			input[0] = String(input[0]);
-		}catch{
+		}catch(e){
 			return message.reply("Something went wrong. Try using a different name for your queue.");
 		}
 	}
