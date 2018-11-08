@@ -6,32 +6,13 @@ const youtube = new YouTube(process.env.API_KEY);
 const maxQueueSize = 150000;
 
 module.exports = {
-	addToQueue: async function addToQueue(queueName, url, message, con_database){
+	updateDatabase: async function updateDatabase(queue, message, con_database){
 		queueName = queue.name;
-		url = queue.URL
 		return new Promise(
 			function(resolve, reject){
-				con_database.query(`SELECT * FROM queues WHERE userid = '${message.author.id}' and queuename = '${queueName}'`, 
-					(err, result) =>{
-						if(err) reject(err);
-						else{
-							let query;
-							if(!result.rows[0]){
-								url = url + ";";
-								query = `INSERT INTO queues (userid, queueName, queue) VALUES ('${message.author.id}', '${queueName}', '${url}')`;
-							} 
-							else{
-								let currentQueue = result.rows[0].queue;
-								if (currentQueue.length == maxQueueSize){ //length of medium text
-									return message.reply("Your queue has reached it's max size limit.");
-								}
-								currentQueue = currentQueue + url + ";";
-								query = `UPDATE queues SET queue = '${currentQueue}' WHERE userid = '${message.author.id}' and queuename = '${queueName}'`;
-							}
-						resolve(con_database.query(query));
-						}//end else
-					}//end (err,result) =>
-				)//end con_database.query
+				var stringify = JSON.stringify (queue);
+				let query = `INSERT INTO queues (userid, queueName, queue) VALUES ('${message.author.id}', '${queueName}', '${stringify}')`;
+				resolve(con_database.query(query));
 			}//end function
 		);//end Promise
 	},//end addToQueue();
@@ -54,14 +35,13 @@ module.exports = {
 						if(err) reject(err);
 						else{
 							if(!result.rows[0]){
-								var queue = new Queue(`${queueName}`);
-								resolve(queue);
+								var flag = false;
+								resolve(flag);
 							}//end if
 							else{
 								let currentQueue = result.rows[0].queue;
-								let queueArray = currentQueue.split(";");
-								queueArray.pop(); //Last semicolon results in empty element of array at the end
-								resolve(queueArray);
+								 //Last semicolon results in empty element of array at the end
+								resolve(currentQueue);
 							}//end else
 						}//end else
 					}//end (err,result) =>
@@ -136,7 +116,16 @@ Please provide a value to select one of the search results ranging from 1-10.`);
 			resolve(titles);
 			reject("Bad parameter");
 		});//end promise
-	},//end getTitiles
+	},//end getTitles
+	getTitle: async function getTitle(url){
+		return new Promise(async (resolve, reject) => {
+			var title = "";
+			var result = await this.getMetadata(url);
+			title = result.title;
+			resolve(title);
+			reject("Bad parameter");
+		});//end promise
+	},//end getTitles
 	deleteQueue: async function deleteQueue(queueName, message, con_database){
 		return new Promise((resolve, reject) => {
 			//Updating database

@@ -34,7 +34,7 @@ module.exports = {
 
     inputParse: async function inputParse(message,args,prefix,helpMessage){ //Returns queueName and URL
 		let url;
-		let song=false;
+		let title=false;
 		let queue;
 		let regex = /^(https:\/\/)?(www.)?youtube.com\//;
 	    let defaultQueue = "defaultQueue";
@@ -52,7 +52,7 @@ module.exports = {
 					if(element.indexOf("\"") != -1) strPosition = element.indexOf("\"");
 				});
 				tempArgs[index-1] = tempArgs[index-1].replace("\"","");
-				song = args[0] + " " + tempArgs.join(" ");
+				title = args[0] + " " + tempArgs.join(" ");
 			}//end else if(args[0].startsWith("\"")
 			//Catching single quotes error
 			else if(args[1].startsWith("\'")){
@@ -65,7 +65,7 @@ module.exports = {
 				args[1] = args[1].replace("\"",""); //removes first "
 				if(args[1].endsWith("\"")){
 					args[1] = args[1].slice(0, -1); //removes last "
-					song = args[1];
+					title = args[1];
 				}//end if	
 				else{
 					tempArgs = args.slice(2);
@@ -76,7 +76,7 @@ module.exports = {
 						if(element.indexOf("\"") != -1) strPosition = element.indexOf("\"");
 					});
 					tempArgs[index-1] = tempArgs[index-1].replace("\"","");
-					song = args[1] + " " + tempArgs.join(" ");
+					title = args[1] + " " + tempArgs.join(" ");
 				}//end else
 			}//end else if(args[1].substring(0,1) === "\"")
 			//if !add <queue> <URL>
@@ -108,7 +108,7 @@ module.exports = {
 				queue = defaultQueue;
 				args[0] = args[0].replace("\"",""); //removes first "
 				if(args[0].endsWith("\"")) args[0] = args[0].slice(0, -1); //removes last "
-				song = args[0];
+				title = args[0];
 			}//end else if(args[0].startsWith("\"")
 
 			//if !add <URL>
@@ -122,10 +122,13 @@ module.exports = {
 			}//end else
 		}//end else
 
-		if(song){
+		if(title){
 			//Getting URL
 			url = await queueFunctions.getURL(message, song);
-		};
-		return [queue, url];
+		}
+		else{
+			title = queueFunctions.getTitle(title);
+		}
+		return [queue, url, title];
 	}
 };
