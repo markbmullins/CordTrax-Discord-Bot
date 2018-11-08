@@ -4,9 +4,12 @@ const YouTube = require("simple-youtube-api");
 const youtubeApiKey = process.env.API_KEY;
 const youtube = new YouTube(process.env.API_KEY);
 const maxQueueSize = 150000;
+const Queue = require("./queueClass");
 
 module.exports = {
 	addToQueue: async function addToQueue(queueName, url, message, con_database){
+		queueName = queue.name;
+		url = queue.URL
 		return new Promise(
 			function(resolve, reject){
 				con_database.query(`SELECT * FROM queues WHERE userid = '${message.author.id}' and queuename = '${queueName}'`, 
@@ -42,6 +45,8 @@ module.exports = {
 	    		});
 	  	});
 	},
+	//getQueue(queueName, message, con_database)
+	//returns queue
 	getQueue: async function getQueue(queueName, message, con_database){
 		return new Promise(
 			(resolve, reject) => {
@@ -50,8 +55,8 @@ module.exports = {
 						if(err) reject(err);
 						else{
 							if(!result.rows[0]){
-								let queueArray = [];
-								resolve(queueArray);
+								var queue = new Queue(`${queueName}`);
+								resolve(queue);
 							}//end if
 							else{
 								let currentQueue = result.rows[0].queue;
@@ -95,8 +100,6 @@ module.exports = {
 			var url;
 			try{
 				var videos = await youtube.searchVideos(song, 10);
-				//console.log(videos);
-				//console.log(videos);
 				let index = 0;
 				message.channel.send(`
 __**Song selection:**__
@@ -156,5 +159,32 @@ Please provide a value to select one of the search results ranging from 1-10.`);
 			resolve(con_database.query(query));
 			reject("Bad parameter");
 		});//end promise
-	}//end updatequeue
+	},//end updatequeue
+	createTitlesEmbed: function createTitlesEmbed(titles, queueName){
+		var count;
+		for(count = 0; count < titles.length; count++){
+			titles[count] = `${count+1}. ${titles[count]}` ;
+		}
+		var titlesString = "";
+		for(count = 0; count < titles.length; count++){
+			titlesString = titlesString + titles[count] + "\n";	
+		}
+
+		let queueEmbed = new Discord.RichEmbed();
+		queueEmbed.setTitle(`In queue ${queueName}:`);
+		queueEmbed.setColor("#15f153");
+		queueEmbed.setDescription(titlesString);
+		return queueEmbed;
+	},
+	createTitlesString: function createTitlesString(titles, queueName){
+		var count;
+		for(count = 0; count < titles.length; count++){
+			titles[count] = `${count+1}. ${titles[count]}` ;
+		}
+		var titlesString = "";
+		for(count = 0; count < titles.length; count++){
+			titlesString = titlesString + titles[count] + "\n";	
+		}
+		return titlesString;
+	}
 };//end module.exports

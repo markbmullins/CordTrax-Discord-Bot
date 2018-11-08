@@ -15,6 +15,7 @@
 	"play" : "\nPlay command help:\n$prefixplay <url> to play a Youtube url,\n$prefixplay <queueName> to begin playing a queue,\n$prefixplay \"<Song Name>\" to search Youtube for your song and play it.\nPlease don't use spaces in your queue names, and put double quotes around song names.\nFor information on adding songs to your queue, use the command ${prefix}add help",
 	"prefix" : "\n",
 	"printqueue" : "\n",
+	"remove" : "\n Remove command help: \n",
 	"removerole" : "\n",
 	"removerolenotify" : "\n",
 	"report" : "\n",

@@ -23,24 +23,8 @@ module.exports.run = async (client,message,args,prefix,con_database) => {
 		message.reply(`This queue is empty or does not exist. Use the add command to add songs to a queue. For help adding songs to your queue, type ${prefix}add help.`);
 	}
 	else if(queue.length >= 1){
-		//Counting up the number of embeds needed if using the .addfield method.
-		var numEmbeds = Math.floor(queue.length / 25)
-		if (queue.length % 25 != 0) numEmbeds += 1;
-
 		var titles = await queueFunctions.getTitles(queue);
-		var count;
-		for(count = 0; count < titles.length; count++){
-			titles[count] = `${count+1}. ${titles[count]}` ;
-		}
-		var titlesString = "";
-		for(count = 0; count < titles.length; count++){
-			titlesString = titlesString + titles[count] + "\n";	
-		}
-
-		let queueEmbed = new Discord.RichEmbed();
-		queueEmbed.setTitle(`In queue ${args[0]}:`);
-		queueEmbed.setColor("#15f153");
-		queueEmbed.setDescription(titlesString);
+		queueEmbed = queueFunctions.createTitlesEmbed(titles, args[0]);
 		return message.channel.send(queueEmbed);
 	}
 }//End module.exports.run()
