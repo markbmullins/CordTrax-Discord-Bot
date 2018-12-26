@@ -6,16 +6,54 @@ const youtube = new YouTube(process.env.API_KEY);
 const maxQueueSize = 150000;
 
 module.exports = {
-	updateDatabase: async function updateDatabase(queue, message, con_database){
-		queueName = queue.name;
-		return new Promise(
-			function(resolve, reject){
-				var stringify = JSON.stringify (queue);
-				let query = `INSERT INTO queues (userid, queueName, queue) VALUES ('${message.author.id}', '${queueName}', '${stringify}')`;
-				resolve(con_database.query(query));
-			}//end function
-		);//end Promise
-	},//end addToQueue();
+	createTitlesEmbed: function createTitlesEmbed(titles, queueName){
+		var count;
+		for(count = 0; count < titles.length; count++){
+			titles[count] = `${count+1}. ${titles[count]}` ;
+		}
+		var titlesString = "";
+		for(count = 0; count < titles.length; count++){
+			titlesString = titlesString + titles[count] + "\n";	
+		}
+
+		let queueEmbed = new Discord.RichEmbed();
+		queueEmbed.setTitle(`In queue ${queueName}:`);
+		queueEmbed.setColor("#15f153");
+		queueEmbed.setDescription(titlesString);
+		return queueEmbed;
+	},
+	createTitlesString: function createTitlesString(titles, queueName){
+		var count;
+		for(count = 0; count < titles.length; count++){
+			titles[count] = `${count+1}. ${titles[count]}` ;
+		}
+		var titlesString = "";
+		for(count = 0; count < titles.length; count++){
+			titlesString = titlesString + titles[count] + "\n";	
+		}
+		return titlesString;
+	},
+	getTitles: async function getTitles(queue){
+		var titles=[];
+		var count = 0;
+		return new Promise(async (resolve, reject) => {
+			for(count = 0; count < queue.length; count++){
+				var result = await this.getMetadata(queue[count]);
+				titles[count] = result.title;
+			}
+			resolve(titles);
+			reject("Bad parameter");
+		});//end promise
+	},//end getTitles
+	getTitle: async function getTitle(url){
+		return new Promise(async (resolve, reject) => {
+			var title = "";
+			var result = await this.getMetadata(url);
+			title = result.title;
+			resolve(title);
+			reject("Bad parameter");
+		});//end promise
+	},//end getTitles
 	getMetadata: function getMetadata(url) {
 		return new Promise((resolve, reject) => {
 	    	YTDL.getBasicInfo(url, 
@@ -25,56 +63,6 @@ module.exports = {
 	    		});
 	  	});
 	},
-	//getQueue(queueName, message, con_database)
-	//returns queue
-	getQueue: async function getQueue(queueName, message, con_database){
-		return new Promise(
-			(resolve, reject) => {
-				con_database.query(`SELECT * FROM queues WHERE userid = '${message.author.id}' and queuename = '${queueName}'`, 
-					(err, result) =>{
-						if(err) reject(err);
-						else{
-							if(!result.rows[0]){
-								var flag = false;
-								resolve(flag);
-							}//end if
-							else{
-								let currentQueue = result.rows[0].queue;
-								 //Last semicolon results in empty element of array at the end
-								resolve(currentQueue);
-							}//end else
-						}//end else
-					}//end (err,result) =>
-				);//end con_datbase.query
-			}//end function
-		);//end promise
-	},//end getQueue();
-	getAllQueues: async function getAllQueues(message, con_database){
-		return new Promise(
-			(resolve, reject) => {
-				con_database.query(`SELECT * FROM queues WHERE userid = '${message.author.id}'`, 
-					(err, result) =>{
-						if(err) reject(err);
-						else{
-							if(!result.rows[0]){
-								let queues = [];
-								resolve(queues);
-							}//end if
-							else{
-								let queues = [];
-								let i = 0;
-								result.rows.forEach(element=>{
-									queues[i] = result.rows[i].queuename;
-									i++;
-								});
-								resolve(queues);
-							}//end else
-						}//end else
-					}//end (err,result) =>
-				);//end con_datbase.query
-			}//end function
-		);//end promise
-	},//end getQueue();
 	getURL: async function getURL(message, song){
 			var url;
 			try{
@@ -105,76 +93,6 @@ Please provide a value to select one of the search results ranging from 1-10.`);
 			}//end catch
 			return url;
 	},//end getUrl
-	getTitles: async function getTitles(queue){
-		var titles=[];
-		var count = 0;
-		return new Promise(async (resolve, reject) => {
-			for(count = 0; count < queue.length; count++){
-				var result = await this.getMetadata(queue[count]);
-				titles[count] = result.title;
-			}
-			resolve(titles);
-			reject("Bad parameter");
-		});//end promise
-	},//end getTitles
-	getTitle: async function getTitle(url){
-		return new Promise(async (resolve, reject) => {
-			var title = "";
-			var result = await this.getMetadata(url);
-			title = result.title;
-			resolve(title);
-			reject("Bad parameter");
-		});//end promise
-	},//end getTitles
-	deleteQueue: async function deleteQueue(queueName, message, con_database){
-		return new Promise((resolve, reject) => {
-			//Updating database
-			let query = `DELETE FROM queues WHERE queuename = '${queueName}' AND userid = '${message.author.id}'`;
-			resolve(con_database.query(query));
-			reject("Bad parameter");
-		});//end promise
-	},//end updatequeue
-	updateQueue: async function updateQueue(queue, queueName, message, con_database){
-		return new Promise((resolve, reject) => {
-			//Parsing queue back into string of URLs
-			let queueString = "";
-			let count;
-			for(count = 0; count < queue.length; count++){
-				queueString = queueString + queue[count] + ";";
-			}
-			//Updating database
-			let query = `UPDATE queues SET queue = '${queueString}' WHERE userid = '${message.author.id}' and queuename = '${queueName}'`;
-			resolve(con_database.query(query));
-			reject("Bad parameter");
-		});//end promise
-	},//end updatequeue
-	createTitlesEmbed: function createTitlesEmbed(titles, queueName){
-		var count;
-		for(count = 0; count < titles.length; count++){
-			titles[count] = `${count+1}. ${titles[count]}` ;
-		}
-		var titlesString = "";
-		for(count = 0; count < titles.length; count++){
-			titlesString = titlesString + titles[count] + "\n";	
-		}
-
-		let queueEmbed = new Discord.RichEmbed();
-		queueEmbed.setTitle(`In queue ${queueName}:`);
-		queueEmbed.setColor("#15f153");
-		queueEmbed.setDescription(titlesString);
-		return queueEmbed;
-	},
-	createTitlesString: function createTitlesString(titles, queueName){
-		var count;
-		for(count = 0; count < titles.length; count++){
-			titles[count] = `${count+1}. ${titles[count]}` ;
-		}
-		var titlesString = "";
-		for(count = 0; count < titles.length; count++){
-			titlesString = titlesString + titles[count] + "\n";	
-		}
-		return titlesString;
-	},
 	song: class Song{
 		constructor(title, url){
 		    this._title = title;
@@ -223,5 +141,91 @@ Please provide a value to select one of the search results ranging from 1-10.`);
 			}
 	        return URLs;
 	    }
-	}
+	},
+	parseToQueue: async function parseToQueue(json){
+		const Queue = this.queue;
+		const Song = this.song;
+		var parse = JSON.parse(json);
+		parse._songs = parse._songs.map(song => Object.assign(new Song, song));
+		var queue = Object.assign(new Queue, parse);
+		return queue;
+	},
+	getQueue: async function getQueue(queueName, message, con_database){
+		return new Promise(
+			(resolve, reject) => {
+				con_database.query(`SELECT * FROM queues WHERE userid = '${message.author.id}' and queuename = '${queueName}'`, 
+					(err, result) =>{
+						if(err) reject(err);
+						else{
+							//console.log("Result: ", result);
+							if(!result.rows[0]){
+								var flag = false;
+								resolve(flag);
+							}//end if
+							else{
+								var queue = result.rows[0].queue;
+								//Last semicolon results in empty element of array at the end
+								resolve(this.parseToQueue(queue));
+							}//end else
+						}//end else
+					}//end (err,result) =>
+				);//end con_datbase.query
+			}//end function
+		);//end promise
+	},//end getQueue();
+	/*
+	//Follow get queue, parse each one
+	getAllQueues: async function getAllQueues(message, con_database){
+		return new Promise(
+			(resolve, reject) => {
+				con_database.query(`SELECT * FROM queues WHERE userid = '${message.author.id}'`, 
+					(err, result) =>{
+						if(err) reject(err);
+						else{
+							if(!result.rows[0]){
+								let queues = [];
+								resolve(queues);
+							}//end if
+							else{
+								let queues = [];
+								let i = 0;
+								result.rows.forEach(element=>{
+									queues[i] = result.rows[i].queuename;
+									i++;
+								});
+								resolve(queues);
+							}//end else
+						}//end else
+					}//end (err,result) =>
+				);//end con_datbase.query
+			}//end function
+		);//end promise
+	},//end getQueue();*/
+	insertNewInDatabase: async function insertNewInDatabase(queue, message, con_database){
+		queueName = queue.name;
+		return new Promise(
+			function(resolve, reject){
+				var stringify = JSON.stringify (queue);
+				let query = `INSERT INTO queues (userid, queueName, queue) VALUES ('${message.author.id}', '${queueName}', '${stringify}')`;
+				resolve(con_database.query(query));
+			}//end function
+		);//end Promise
+	},//end addToQueue();
+	updateDatabase: async function updateDatabase(queue, message, con_database){
+		var queueName = queue.name;
+		return new Promise((resolve, reject) => {
+			var stringify = JSON.stringify (queue);
+			let query = `UPDATE queues SET queue = '${stringify}' WHERE userid = '${message.author.id}' and queuename = '${queueName}'`;
+			resolve(con_database.query(query));
+			reject("Bad parameter");
+		});//end promise
+	},//end updatequeue
+	deleteQueue: async function deleteQueue(queueName, message, con_database){
+		return new Promise((resolve, reject) => {
+			//Updating database
+			let query = `DELETE FROM queues WHERE queuename = '${queueName}' AND userid = '${message.author.id}'`;
+			resolve(con_database.query(query));
+			reject("Bad parameter");
+		});//end promise
+	}//end updatequeue
 };//end module.exports

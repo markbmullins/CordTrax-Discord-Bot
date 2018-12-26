@@ -14,17 +14,25 @@ module.exports.run = async (client,message,args,prefix,con_database) => {
 	//!add <"song">            |searches youtube, adds song to default queue
 	//!add <queue2> <"song">   |searches youtube, adds song to queue2
 	const helpMessage = helpMessages.add.replace(/\$prefix/g, `${prefix}`);
-	var	input = await tools.inputParse(message,args,prefix,helpMessage); //input[0] = queue name input[1] = URL, input[2] = title (false if not entered)
+	var	input = await tools.inputParse(message,args,prefix,helpMessage); //input[0] = queue name input[1] = URL, 
+																		 //input[2] = title input[3]= message;
+	if(input[3]){return message.reply(input[3]);}
 	//See if queue exists:
 	var queue = await queueFunctions.getQueue(input[0],message,con_database);
+	var song = new Song(input[2], input[1]);
 	//if queue does not exist
-	console.log(queue);
+	console.log("Return from getQueue: ", queue);
 	if(!queue){
 		queue = new Queue(input[0]);
+		queue.addSong(song);
+		let var1 = await queueFunctions.insertNewInDatabase(queue, message, con_database);
 	}
-	var song = new Song(input[2], input[1]);
-	queue.addSong(song);
-	let var1 = await queueFunctions.updateDatabase(queue, message, con_database); //args[0] == queue name, args[1] == url
+	else{
+		queue.addSong(song);
+		let var1 = await queueFunctions.updateDatabase(queue, message, con_database);
+	}
+	console.log("past updating database");
+	 //args[0] == queue name, args[1] == url
 	//Get metadata of song then create a richembed for the song.
 	/*queueFunctions.getMetadata(input[1]).then(
 		result => {

@@ -33,11 +33,12 @@ module.exports = {
     },
 
     inputParse: async function inputParse(message,args,prefix,helpMessage){ //Returns queueName and URL
-		let url;
-		let title=false;
-		let queue;
-		let regex = /^(https:\/\/)?(www.)?youtube.com\//;
-	    let defaultQueue = "defaultQueue";
+		var url = false;
+		var title=false;
+		var queue = false;
+		var message = false;
+		var regex = /^(https:\/\/)?(www.)?youtube.com\//;
+	    var defaultQueue = "defaultQueue";
 		if(args[1]){
 			//if !add <"song">
 			if(args[0].startsWith("\"")){
@@ -56,7 +57,7 @@ module.exports = {
 			}//end else if(args[0].startsWith("\"")
 			//Catching single quotes error
 			else if(args[1].startsWith("\'")){
-				return message.reply("Please use double quotes (\"song name\") instead of single quotes.");
+				message = "Please use double quotes (\"song name\") instead of single quotes.";
 			}//end if(args[1].substring(0,1)
 			//if !add <queue> <song>
 			else if(args[1].startsWith("\"")){
@@ -80,27 +81,26 @@ module.exports = {
 				}//end else
 			}//end else if(args[1].substring(0,1) === "\"")
 			//if !add <queue> <URL>
-			else if(regex.test[args[1]]){
+			else if(regex.test(args[1])){
 				queue = args[0];
 				url = args[1];
 			}
 			else{
-				return message.reply(`Something went wrong. Try ${prefix}add help for help.`);
+				message = `Something went wrong. Try ${prefix}add help for help.`;
 			}//end else
 		}//end if(args[1])
 		else{
 			//!add case
 			if(!args[0]){
-				message.reply("Please provide a song to add to the queue.");
-				return message.reply(helpMessage);
+				message = "Please provide a song to add to the queue.";
 			}//end if
 			//!add help case
 			else if(args[0]==="help"){
-				return message.reply(helpMessage);
+				message = helpMessage;
 			}//end else if
 			//Catching single quotes error
 			else if(args[0].startsWith("\'")){
-				return message.reply("Please use double quotes (\"song name\") instead of single quotes.");
+				message = "Please use double quotes (\"song name\") instead of single quotes.";
 			}//end else if
 			//if !add <"song"> and song is one word
 			else if(args[0].startsWith("\"")){
@@ -118,7 +118,7 @@ module.exports = {
 			}//end if(args[0].search(regex) && !args[1])
 
 			else{
-				return message.reply(`Something went wrong. Try ${prefix}add help for help.`);
+				message = `Something went wrong. Try ${prefix}add help for help.`;
 			}//end else
 		}//end else
 
@@ -126,9 +126,10 @@ module.exports = {
 			//Getting URL
 			url = await queueFunctions.getURL(message, song);
 		}
-		else{
-			title = queueFunctions.getTitle(title);
+		else if (url && !title){
+			title = await queueFunctions.getTitle(url);
 		}
-		return [queue, url, title];
+		var inputArray = [queue, url, title, message];
+		return inputArray;
 	}
 };
