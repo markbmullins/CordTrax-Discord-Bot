@@ -1,1 +1,6 @@
-
+class User{
+    constructor(){
+    
+    }
+  
+}
