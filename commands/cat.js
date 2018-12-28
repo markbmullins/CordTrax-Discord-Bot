@@ -1,6 +1,6 @@
 const Discord = require("discord.js");
 const superagent = require("superagent");
-const helpMessages = require("./functions/helpMessages.json");
+const helpMessages = require('../helpMessages.json');
 
 module.exports.run = async (client,message,args,prefix,con_database) => {
 	const helpMessage = helpMessages.cat.replace(/\$prefix/g, `${prefix}`);
