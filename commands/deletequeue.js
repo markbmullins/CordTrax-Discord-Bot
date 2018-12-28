@@ -1,6 +1,11 @@
 const Discord = require("discord.js");
-const queueFunctions = require("./functions/queueFunctions");
-const helpMessages = require("./functions/helpMessages.json");
+
+//Functions
+const getQueue = require('../functions/getQueue.js');
+const deleteQueue = require('deleteQueue.js'):
+
+//Help Messages
+const helpMessages = require('../helpMessages.json');
 
 module.exports.run = async (client,message,args,prefix,con_database) => {
 	const helpMessage = helpMessages.deletequeue.replace(/\$prefix/g, `${prefix}`);
@@ -14,7 +19,7 @@ module.exports.run = async (client,message,args,prefix,con_database) => {
 		return message.reply(`Invalid use of the deletequeue command. Use ${prefix}deletequeue help for help.`);
 	}
 	else{
-		var queue = await queueFunctions.getQueue(args[0], message, con_database);
+		var queue = await getQueue(args[0], message, con_database);
 		if(queue.length < 1){
 			message.reply("This queue is empty or does not exist.");
 		}//end if
@@ -33,7 +38,7 @@ module.exports.run = async (client,message,args,prefix,con_database) => {
 					return message.channel.send("Invalid value entered, cancelling operation");
 				}//end catch
 				if(response.first().content == "yes"){
-					let var2 = await queueFunctions.deleteQueue(args[0], message, con_database);
+					let var2 = await deleteQueue(args[0], message, con_database);
 					return message.reply(`${args[0]} was deleted.`);
 				}
 				else if(response.first().content == "no"){
