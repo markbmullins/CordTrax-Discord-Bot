@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-const helpMessages = require("./functions/helpMessages.json");
+const helpMessages = require(".././helpMessages.json");
 
 module.exports.run = async (client,message,args,prefix,con_database) => {
 	const helpMessage = helpMessages.eightball.replace(/\$prefix/g, `${prefix}`);
