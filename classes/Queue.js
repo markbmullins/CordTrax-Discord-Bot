@@ -1,14 +1,14 @@
 // Queue Class
 
 class Queue{
-    constructor(name){
+    constructor(name, userId){
         this._name = name;
         this._songs = [];
+        this._ownerId = userId;
+        
+
     }
-    addSong(song){
-        this._songs.push(song);
-    }
-    get length(){
+    get length(){ //Length in number of songs
         return this._songs.length;
     }
     get name() {
@@ -30,6 +30,9 @@ class Queue{
         }
         return URLs;
     }
-	}
+    addSong(song){
+        this._songs.push(song);
+    }
+}
 
 module.exports = Queue;
