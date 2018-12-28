@@ -1,5 +1,5 @@
-const Discord = require("discord.js");
-const superagent = require("superagent");
+const Discord = require('discord.js');
+const superagent = require('superagent');
 const helpMessages = require('../helpMessages.json');
 
 module.exports.run = async (client,message,args,prefix,con_database) => {
