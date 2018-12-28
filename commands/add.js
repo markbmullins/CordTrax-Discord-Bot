@@ -1,9 +1,18 @@
 const Discord = require("discord.js");
-const queueFunctions = require("./functions/queueFunctions");
-const tools = require("./functions/tools");
-const helpMessages = require("./functions/helpMessages.json");
-const Queue = queueFunctions.queue;
-const Song = queueFunctions.song;
+
+//Functions
+const getQueue = require('../functions/getQueue.js');
+const inputParse = require('../functions/inputParse.js');
+const insertNewInDatabase = require('../functions/insertNewInDatabase.js');
+const updateDatabase = require('../functions/updateDatabase.js');
+
+//Classes
+const Queue = require('../classes/Song.js');
+const Song = require('../classes/Queue.js');
+
+//Help messages
+const helpMessages = require('../helpMessages.json');
+
 //to do:
 //Add contents of queue to richEmbed
 module.exports.run = async (client,message,args,prefix,con_database) => {
@@ -14,18 +23,18 @@ module.exports.run = async (client,message,args,prefix,con_database) => {
 	//!add <"song">            |searches youtube, adds song to default queue
 	//!add <queue2> <"song">   |searches youtube, adds song to queue2
 	const helpMessage = helpMessages.add.replace(/\$prefix/g, `${prefix}`);
-	var	input = await tools.inputParse(message,args,prefix,helpMessage); //input[0] = queue name input[1] = URL, 
+	var	input = await inputParse(message,args,prefix,helpMessage); //input[0] = queue name input[1] = URL, 
 																		 //input[2] = title input[3]= message;
 	if(input[3]){return message.reply(input[3]);}
 	//See if queue exists:
-	var queue = await queueFunctions.getQueue(input[0],message,con_database);
+	var queue = await getQueue(input[0],message,con_database);
 	var song = new Song(input[2], input[1]);
 	//if queue does not exist
 	console.log("Return from getQueue: ", queue);
 	if(!queue){
 		queue = new Queue(input[0]);
 		queue.addSong(song);
-		let var1 = await queueFunctions.insertNewInDatabase(queue, message, con_database);
+		let var1 = await insertNewInDatabase(queue, message, con_database);
 	}
 	else{
 		queue.addSong(song);
