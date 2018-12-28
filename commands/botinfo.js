@@ -1,5 +1,6 @@
-const Discord = require("discord.js");
-const helpMessages = require("./functions/helpMessages.json");
+const Discord = require('discord.js');
+const helpMessages = require('../helpMessages.json');
+
 //To do: include clipart into
 // https://openclipart.org/detail/297747/record-player
 //
