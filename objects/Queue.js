@@ -1,4 +1,10 @@
 // Queue Class
+const queue = {
+    name = "",
+    songs = [],
+    userId = "",
+    
+}
 
 class Queue{
     constructor(name, userId){
