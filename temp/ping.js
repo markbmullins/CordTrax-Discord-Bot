@@ -1,9 +1,7 @@
-const helpMessages = require("../helpMessages.json");
+const Discord = require("discord.js");
+const helpMessages = require("../helpMessages.json.js");
 
-module.exports.run = async commandsDTO => {
-  const message = commandsDTO.message;
-  const args = commandsDTO.args;
-  const prefix = commandsDTO.prefixl;
+module.exports.run = async (client, message, args, prefix, con_database) => {
   const helpMessage = helpMessages.ping.replace(/\$prefix/g, `${prefix}`);
   //if help
   if (args[0] === "help") return message.reply(`${helpMessage}`);

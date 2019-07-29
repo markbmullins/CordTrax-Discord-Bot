@@ -1,7 +1,7 @@
-const getURL = require("../utils/getURL").getURL;
-const getQueue = require("../utils/getQueue").getQueue;
+const Discord = require("discord.js");
+const queueFunctions = require("../utils/queueFunctions");
 const YTDL = require("ytdl-core");
-const helpMessages = require("../helpMessages.json");
+const helpMessages = require("../helpMessages.json.js");
 
 function playQueue(client, connection, message) {
   const streamOptions = { bitrate: 40000 };
@@ -27,7 +27,7 @@ function playSingleSong(song, connection, message) {
   });
 }
 
-module.exports.run = async (client, message, args, prefix, databaseConnection) => {
+module.exports.run = async (client, message, args, prefix, con_database) => {
   //!play
   //!play help
   //!play <url>
@@ -70,7 +70,7 @@ module.exports.run = async (client, message, args, prefix, databaseConnection) =
       });
       tempArgs[index - 1] = tempArgs[index - 1].replace('"', "");
       song = args[0] + " " + tempArgs.join(" ");
-      url = await getURL(message, song);
+      url = await queueFunctions.getURL(message, song);
       notAQueueFlag = true;
     } //end else if(args[0].startsWith("\"")
 
@@ -103,7 +103,7 @@ module.exports.run = async (client, message, args, prefix, databaseConnection) =
     else if (args[0].startsWith('"')) {
       args[0] = args[0].replace('"', ""); //removes first "
       if (args[0].endsWith('"')) args[0] = args[0].slice(0, -1); //removes last "
-      url = await getURL(message, args[0]);
+      url = await queueFunctions.getURL(message, args[0]);
       notAQueueFlag = true;
     } //end else if(args[0].startsWith("\"")
 
@@ -113,7 +113,7 @@ module.exports.run = async (client, message, args, prefix, databaseConnection) =
       notAQueueFlag = true;
     } //end if(regex.test(args[0]))
     else if (!notAQueueFlag) {
-      client.queue = await getQueue(args[0], message, databaseConnection); //Queue should return false if it does not exist.
+      client.queue = await queueFunctions.getQueue(args[0], message, con_database); //Queue should return false if it does not exist.
       client.queueIndex = 0;
       if (!client.queue[0]) {
         return message.reply(
