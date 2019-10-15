@@ -14,7 +14,7 @@
     "nodemon": "^1.19.1"
   },
   "scripts": {
-    "start": "node bot.js"
+    "start": "nodemon bot.js"
   },
   "main": "bot.js"
 }

@@ -7,39 +7,28 @@ const giveMemberXp = require("./utils/giveMemberXp");
 const importCommands = require("./utils/importCommands");
 const queryDB = require("./utils/queryDB");
 const initializePrefix = require("./utils/initializePrefix");
+const Logger = require("./utils/logger");
+
 client.commands = new Discord.Collection();
 require("dotenv").config();
 
 // Logs in to the application.
 client.login(process.env.token);
 
+// New logger instance
+const log = new Logger({ showTime: false });
+commandsDTO.log = log;
+
 // Online message
 client.on("ready", async () => {
-  console.log(`${client.user.username} is online on ${client.guilds.size} servers.`);
+  log.info(`${client.user.username} is online on ${client.guilds.size} servers.`);
 });
 
 // Command Handler:
-fs.readdir("./commands/", (err, files) => {
-  if (err) console.log(err);
-
-  const jsfile = files.filter(f => f.split(".").pop() === "js");
-  if (jsfile.length <= 0) {
-    console.log("Couldn't find commands.");
-    return;
-  }
-
-  // loading each .js file
-  jsfile.forEach((f, i) => {
-    const props = require(`./commands/${f}`);
-    console.log(`${f} loaded.`);
-
-    // Adding command files to the commands map
-    client.commands.set(props.help.name, props);
-  });
-});
+readCommands();
 
 if (process.env.SHOULD_CONNECT_TO_DB) connectToDatabase(commandsDTO);
-if (commandsDTO.databaseConnection !== null) console.log("Connection to DB set in DTO");
+if (commandsDTO.databaseConnection !== null) log.info("Connection to DB set in DTO");
 
 // When a message is recieved by the bot
 client.on("message", async message => {
@@ -52,26 +41,21 @@ client.on("message", async message => {
 
   if (commandsDTO.prefix === null) await initializePrefix(commandsDTO);
 
-  const [commandAndPrefix, ...args] = message.content.split(" ");
-  if (!commandAndPrefix) return;
-  const enteredCommand = commandAndPrefix.substring(commandsDTO.prefix.length).toLowerCase(); // type: string | includes prefix at this point
-  const enteredPrefix = commandAndPrefix.substring(0, commandsDTO.prefix.length);
+  const { enteredCommand, enteredPrefix, args } = parseMessage();
 
   // If message does not start with the prefix, update XP
   if (enteredPrefix !== commandsDTO.prefix) {
     return giveMemberXp(commandsDTO);
-  }
-
-  // if message starts with prefix, see if entered command exists
-  else {
+  } else {
+    log.info(`User ${message.author.username} called command ${enteredCommand} with args: ${args}`);
     commandsDTO.args = args;
     commandsDTO.client = client;
     const commandfile = client.commands.get(enteredCommand);
 
     // if command exists, run it
-    if (commandfile) commandfile.run(commandsDTO);
-    // If command does not exist
-    else {
+    if (commandfile) {
+      commandfile.run(commandsDTO);
+    } else {
       // If help does not exist and the user asked for help:
       if (enteredCommand === "help") {
         return message.reply(`Help seems to be unavailable right now. Sorry.`);
@@ -91,7 +75,11 @@ client.on("voiceStateUpdate", (oldMemberState, newMemberState) => {
   if (!tempChannels) return;
   tempChannels.forEach(channel => {
     // If user is leaving a temporary channel
-    if (oldMemberState && oldMemberState.voiceChannel && oldMemberState.voiceChannelID === channel.id) {
+    if (
+      oldMemberState &&
+      oldMemberState.voiceChannel &&
+      oldMemberState.voiceChannelID === channel.id
+    ) {
       // for each temporary channel, if it is empty delete it
       tempChannels.forEach(chan => {
         if (chan && chan.members && chan.members.size === 0) {
@@ -123,6 +111,36 @@ client.on("guildMemberRemove", async member => {
   let welcomeChannel = member.guild.channels.find(c => c.name === "welcome_leave");
   welcomeChannel.send(`${member} has left the server.`);
 });
+
+function readCommands() {
+  fs.readdir("./commands/", (err, files) => {
+    if (err) log.error(`Error reading commands: ${err}`);
+
+    const jsfile = files.filter(f => f.split(".").pop() === "js");
+    if (jsfile.length <= 0) {
+      log.error("Couldn't find commands.");
+      return;
+    }
+
+    // loading each .js file
+    jsfile.forEach((f, i) => {
+      const props = require(`./commands/${f}`);
+      log.info(`${f} loaded.`);
+
+      // Adding command files to the commands map
+      client.commands.set(props.help.name, props);
+    });
+  });
+}
+
+function parseMessage() {
+  const [commandAndPrefix, ...args] = commandsDTO.message.content.split(" ");
+  if (!commandAndPrefix) return;
+  const enteredCommand = commandAndPrefix.substring(commandsDTO.prefix.length).toLowerCase(); // type: string | includes prefix at this point
+  const enteredPrefix = commandAndPrefix.substring(0, commandsDTO.prefix.length);
+
+  return { enteredCommand, enteredPrefix, args };
+}
 
 // To do
 // Create command channelnotifications <on/off> that allows user to turn off channel notifications

@@ -23,10 +23,11 @@ const commandsDTO = {
   client: null,
   message: null,
   args: [],
-  prefix: null,
+  prefix: "?",
   databaseConnection: null,
   queryString: null,
   temporaryChannels: [],
+  log: null
 };
 
 module.exports = commandsDTO;
