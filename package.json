@@ -4,12 +4,13 @@
   "version": "0.0.0",
   "devDependencies": {},
   "scripts": {
-    "start": "nodemon -r dotenv/config bot.js"
+    "start": "nodemon bot.js"
   },
   "main": "bot.js",
   "dependencies": {
     "discord.js": "^11.5.1",
     "dotenv": "^8.2.0",
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.2",
+    "ytdl-core": "^1.0.7"
   }
 }
