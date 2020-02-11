@@ -1,0 +1,5 @@
+API_KEY="AIzaSyCELHyrBPYArNqB2Nh2g6F0mBlAOKnylwA"
+DATABASE_URL="postgres://rxkewswygahmrh:eaf1c8a0753d6796429a8be6d0549930cfd9d1d5a6f5beed8c9954d3bfbfacee@ec2-174-129-18-98.compute-1.amazonaws.com:5432/d2llk19jq68g3e"
+prefix="?"
+token="NDg5NjUyNzc3MDI3NjMzMTcz.DpVz0w.eV98tK5uCAQ8u79doWvhHkY9jwU"
+SHOULD_CONNECT_TO_DB=true

@@ -11,11 +11,14 @@ client.on("ready", async () => {
 
 fs.readdir("./commands/", (err, files) => {
     if (err) console.log(err);
+
     const jsfile = files.filter(f => f.split(".").pop() === "js");
+
     if (jsfile.length <= 0) {
         console.log("Couldn't find commands.");
         return;
     }
+
     jsfile.forEach((f, i) => {
         const props = require(`./commands/${f}`);
         console.log(`${f} loaded.`);
@@ -26,12 +29,16 @@ fs.readdir("./commands/", (err, files) => {
 client.on("message", async message => {
     if (message.author.bot) return;
     if (message.channel.type === "dm") return;
+
     const prefix = "!";
     const messageContent = message.content.split(" ");
     const cmd = messageContent[0].toLowerCase();
+
     if (cmd.substring(0, prefix.length) !== prefix) return;
+
     const args = messageContent.slice(1);
     const commandfile = client.commands.get(cmd.slice(prefix.length));
+
     if (commandfile) commandfile.run(client, message, args);
     else return message.reply(`Invalid command.`);
 });
