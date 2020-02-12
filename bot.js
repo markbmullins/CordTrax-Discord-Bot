@@ -4,7 +4,6 @@ const client = new Discord.Client();
 const fs = require("fs");
 client.commands = new Discord.Collection();
 
-console.log(process.env.token);
 client.login(process.env.token);
 
 client.on("ready", async () => {

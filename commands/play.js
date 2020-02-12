@@ -1,14 +1,11 @@
-const YTDL = require("ytdl-core");
+const ytdl = require("ytdl-core");
 
-module.exports.run = async (client, message, args) => {
-    const regex = /^(https:\/\/)?(www.)?youtube.com\//;
+module.exports.run = (client, message, args) => {
     const voiceChannel = message.member.voiceChannel;
-    let url = args[0];
-
-    //Checking permissions
     if(!voiceChannel){
         return message.reply("You must be in a voice channel.")
     }
+
     const permissions = voiceChannel.permissionsFor(message.client.user);
     if(!permissions.has('CONNECT')){
         return message.reply("I cannot connect to your voice channel, make sure I have the proper permissions.");
@@ -16,19 +13,25 @@ module.exports.run = async (client, message, args) => {
     if(!permissions.has('SPEAK')){
         return message.reply("I cannot speak in this voice channel, make sure I have the proper permissions.");
     }
+    if(!voiceChannel.joinable){
+        return message.reply("Somthing went wrong, I can't join your voice channel.");
+    }
 
-    if(!message.guild.voiceConnection){
+    const url = args[0];
+    const streamOptions = { bitrate : 40000 };
+    const stream = ytdl(url, { filter : 'audioonly' });
+    const connection = message.guild.voiceConnection;
+    let dispatcher;
+    if(connection){
+        dispatcher = connection.playStream(stream, streamOptions);
+    } else {
+        voiceChannel.join().then(connection =>  {
+            dispatcher = connection.playStream(stream, streamOptions);
+        });
+    }
 
-    client.queueIndex = 0;
-    message.member.voiceChannel.join().then(connection =>  {
-        const streamOptions = {bitrate : 40000};
-        const stream = ytdl(url, { filter : 'audioonly' });
-        const dispatcher = connection.playStream(stream, streamOptions);
-        dispatcher.on("end", () => connection.disconnect());
-    });
-
-    }//end if
-}//end module
+    if(dispatcher) dispatcher.on("end", () => connection.disconnect());
+}
 
 
 

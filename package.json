@@ -4,12 +4,16 @@
   "version": "0.0.0",
   "devDependencies": {},
   "scripts": {
-    "start": "nodemon bot.js"
+    "start": "nodemon bot.js",
+    "jsdoc": "jsdoc -c jsdoc.json"
   },
   "main": "bot.js",
   "dependencies": {
     "discord.js": "^11.5.1",
     "dotenv": "^8.2.0",
+    "ffmpeg": "0.0.4",
+    "jsdoc": "^3.6.3",
+    "node-opus": "^0.3.3",
     "nodemon": "^2.0.2",
     "ytdl-core": "^1.0.7"
   }
